@@ -4,28 +4,30 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import CardContent from '@material-ui/core/CardContent';
 import Drawer from '@material-ui/core/Drawer';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import {Link} from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
-import { Button } from '@material-ui/core';
-import Badge from '@material-ui/core/Badge';
+import { Button,Card } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+// import Badge from '@material-ui/core/Badge';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+// import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItemsDrawer from './ListItemsDrawer';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Pagination from './Pagination'
+import FormLabel from '@material-ui/core/FormLabel';
+// import Table from '@material-ui/core/Table';
+// import TableBody from '@material-ui/core/TableBody';
+// import TableCell from '@material-ui/core/TableCell';
+// import TableHead from '@material-ui/core/TableHead';
+// import TableRow from '@material-ui/core/TableRow';
+// import Pagination from './Pagination'
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import TableContainer from '@material-ui/core/TableContainer';
+// import Paper from '@material-ui/core/Paper';
+// import TableContainer from '@material-ui/core/TableContainer';
 
 const drawerWidth = 240;
 
@@ -106,6 +108,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         overflow: 'auto',
         flexDirection: 'column',
+        justifyContent:'center'
     },
     fixedHeight: {
 
@@ -139,7 +142,15 @@ const useStyles = makeStyles(theme => ({
        
          width: '180px',
      },
-    
+    // login:{
+    //     justifycontent: 'center',
+    //     display: 'flex',
+    //     alignitems: 'center',
+    //     fontfamily: ['Times New Roman', 'Times', 'serif'],
+    //     paddingtop: '1em',
+    //     margintop: '2em',
+    //     flexwrap: 'wrap'
+    // },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 7),
         transition: theme.transitions.create('width'),
@@ -181,7 +192,7 @@ export default function BuildDetails(props) {
     const handleGetProjectName = (getProjectName) => {
         setProjectName(getProjectName);
     };
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight,classes.login);
     const handleDeshboard = () => {
         props.history.push("/Dashboard");
         console.log("MyDashboard");
@@ -242,31 +253,31 @@ export default function BuildDetails(props) {
        
        
       
-    useEffect(() => {
+    // useEffect(() => {
 
 
-        async function fetchData(product_id) {
-            handleGetProjectName(product_id);
-            var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-            targetUrl = 'http://' + ip + ':8000/api/v1/workflow/property/'+props.location.state.VersionId;
-            console.log("data");
-            const res = await fetch(proxyUrl + targetUrl)
-                .then(blob => blob.json())
-                .then(data => {
-                    console.table(data);
-                    handle(data);
-                    return data;
-                })
-                .catch(e => {
-                });
-            console.log(res);
+    //     async function fetchData(product_id) {
+    //         handleGetProjectName(product_id);
+    //         var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+    //         targetUrl = 'http://' + ip + ':8000/api/v1/workflow/property/'+props.location.state.VersionId;
+    //         console.log("data");
+    //         const res = await fetch(proxyUrl + targetUrl)
+    //             .then(blob => blob.json())
+    //             .then(data => {
+    //                 console.table(data);
+    //                 handle(data);
+    //                 return data;
+    //             })
+    //             .catch(e => {
+    //             });
+    //         console.log(res);
 
-            console.log(project);
+    //         console.log(project);
 
-        }
-        fetchData();
-    }, []);
-    const paginate =(pageNumber)=> setCurrentPage(pageNumber)
+    //     }
+    //     fetchData();
+    // }, []);
+    
     return (
         <div className={classes.root}>
             {/* {console.log(props)
@@ -303,6 +314,7 @@ export default function BuildDetails(props) {
                     </IconButton>
                 </div>
                 <Divider />
+                
                 <ListItemsDrawer
                     Dashboard={handleDeshboard}
                     AllProduct={handleAllProduct}
@@ -311,42 +323,25 @@ export default function BuildDetails(props) {
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
-                <Paper className={classes.root}>
-                    <TableContainer className={classes.container}>
-                    <Table ><div>
-                        <TableHead >
-                            <div  >
-                                <TableRow >
-                                
-                                  
-                                    <TableCell className={classes.tableColumnWidth}>Version</TableCell>
-                                    <TableCell className={classes.tableColumnWidth}>Branch</TableCell>
-                                   
-                                </TableRow>
-                            </div>
-                        </TableHead>
-                        <TableBody >
-                            {project.map(value => (
-                                <div >
-                                    <TableRow  hover className={classes.tableRow} style={{cursor : 'pointer'}}>
-                                       
-                                       
-                                        <TableCell className={classes.tableDataWidth}>{value.properties_dict.version_number}</TableCell>
-                                        <TableCell className={classes.tableDataWidth}>{value.properties_dict.branch}</TableCell>
-            
-                                       
-                                    </TableRow>
-                                </div>
-                            ))}
-                        </TableBody>
-                   </div> </Table>
-                   <Pagination postsPerPage={postPerPage} totalPosts={project.length} paginate={paginate}/>
-                    </TableContainer>
-                   
-                    </Paper>
+                <Grid direction="row" justify="left" alignItems="left">
+                <Card className="cardView">
+                        <div>
+                            <FormLabel component="role" style={{ fontWeight: 'bold', fontSize: 'large' }}></FormLabel>
+                           
+                        </div>
+                        <CardContent style={{ fontWeight: 'bold', fontSize: 'large', textAlign:'left'}}>
+                     {/* <b>   {project.map(value => ())}</b> */}
+                        <h3 >Build:</h3>
+                        <h3>Branch:</h3>
+                        <h3>Date & Time:</h3>
+                        </CardContent>
+
+                </Card>&nbsp;<div style={{ fontWeight: 'bold', fontSize: 'large', textAlign: 'center' }} >
+                
                     <Button variant="contained" color="primary" onClick={() => handleApprove()}>Approve</Button>
-            <Button variant="contained" color="Secondary" onClick={() => handleReject()}>Reject</Button>
-            {/* <Button variant="contained" color="primary" onClick={value.properties_dict.download_url}>Download</Button> */}
+           &nbsp; <Button variant="contained" color="Secondary" onClick={() => handleReject()}>Reject</Button>
+           </div>
+           </Grid>
                 </Container></main>
         </div>
 

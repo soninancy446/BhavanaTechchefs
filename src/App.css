@@ -15,7 +15,7 @@
 .mainlogin{
   box-shadow:
   -6px -6px 8px -4px rgba(118, 150, 254, 0.75),
-   6px -6px 8px -4px rgba(254,159,50,0.75),
+   6px -6px 8px -4px rgba(68, 60, 50, 0.75),
    6px 6px 8px -4px rgba(139, 139, 95, 0),
    6px 6px 8px -4px rgba(0,0,255,2.75);
   width: 20%;
@@ -74,16 +74,16 @@ display: none;
 }
 
 td.MuiTableCell-root.MuiTableCell-body{  transition: 0.2s ease;}
-td.MuiTableCell-root.MuiTableCell-body:hover {
+/* td.MuiTableCell-root.MuiTableCell-body:hover {
 
   transform: scale3d(1, 1.1, 1);
   color: #0b1269;
   box-shadow: inset 0px 0px 20px 11px #bfd6e4;
-}
+} */
 
-  .tableCell :hover {
+  /* .tableCell :hover {
 background-color: blue;
-  }
+  } */
   .page{
    
    margin:8% auto  0 auto; 
@@ -101,7 +101,7 @@ background-color: blue;
    
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     width: 50%;
     min-height: 400px;
     height: 100%;

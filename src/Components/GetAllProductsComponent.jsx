@@ -38,6 +38,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
+    flexDirection:'row',
     minWidth: 275
   },
   typography: {
@@ -363,21 +364,14 @@ export default function GetAllProductsComponent(props) {
 
   //     });
   // }
-   const handleRemoveproduct=()=>{
-     console.log("asdfgh");
-     alert("Product Removed")
-     props.history.push("/GetAllProductsComponent");
-     
-   }
+   
    const handleAddproduct=()=>{
      console.log("edfe");
      alert("Product Added");
     props.history.push("/GetAllProductsComponent");
     
    }
-  const handleTrigger=()=>{
-    props.history.push("/TriggerComponent");
-  }
+  
   const handleBuildDetails=(id)=>{
     console.log(id);
     
@@ -402,24 +396,6 @@ export default function GetAllProductsComponent(props) {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Products
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <IconButton color="inherit">
-            <Badge badgeContent={0} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -441,9 +417,9 @@ export default function GetAllProductsComponent(props) {
           AboutUs={handleAboutUs} />
 
       </Drawer>
-      <main className={classes.content} style={{backgroundColor: "coral"}} >
+      <main className={classes.content} style={{backgroundColor: ""}} >
         <Container maxWidth="lg" >
-        {/* <span class="iconify" data-icon="mdi-minus-circle-outline" data-inline="false"></span> */}
+       
           <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", paddingTop: '140px' }}>
           <PopupState variant="popper" popupId="demo-popup-popper">
       {popupState => (
@@ -470,37 +446,14 @@ export default function GetAllProductsComponent(props) {
               </Fade>
             )}
           </Popper>
-          <RemoveCircleIcon variant="contained" color="primary" {...bindToggle(popupState)} style={{width:'190%', height:'40',
-        alignItems:'center',justifyContent:'center'}}>
-           Products</RemoveCircleIcon>
-          <Popper {...bindPopper(popupState)} transition>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={3}>
-                <Paper>
-                  <Typography className={classes.typography}> <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">ProductName</InputLabel>
-        
-          <OutlinedInput
-            endAdornment={
-              <InputAdornment position="end">
-              </InputAdornment>
-            }
-            labelWidth={70}
-          />&nbsp;<Button color='primary' variant="contained" onClick={()=>handleRemoveproduct()}>Submit</Button>
-        </FormControl>.</Typography>  
-                </Paper>
-              </Fade>
-            )}
-          </Popper>
         </div>
       )}
     </PopupState><span class="iconify" data-icon="mdi-minus-circle-outline" data-inline="false"></span>
             {show ? project.map(value => (
-              <div onClick={()=>handleBuildDetails(value.id)} props={props}><ul>
-                <b >
-                 {/* <b onClick={() => handleBuilds1(value.id,value.product_name,value.branch_name,value.version_number)}> */}
+              <div style={{display:'flex',flexDirection:'row',justifyContent:"space-between"}} onClick={()=>handleBuildDetails(value.id)} props={props}><ul>
+                <b>
                  <Grid item xs={12} md={4} lg={3}>
-                  <Paper className={classes.root}> <CardContent> <Typography className={classes.title} color="textSecondary" gutterBottom>
+                  <Paper className={classes.root} > <CardContent> <Typography className={classes.title} color="textSecondary" gutterBottom>
                   </Typography> {value.product_name}</CardContent></Paper> </Grid>
                   </b> 
               </ul> 

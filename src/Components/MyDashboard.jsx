@@ -153,7 +153,9 @@ export default function Dashboard(props) {
   const handleAdmin=()=>{
     props.history.push("/Admin");
   }
-  
+  const handleLogout=()=>{
+    props.history.push("/");
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -173,13 +175,6 @@ export default function Dashboard(props) {
           </Typography>
           {/* <TextField id="outlined-basic" label="Commit id" variant="outlined" /> */}
       {/* vonClick={()=>{handleAdmin()}}    */}
-      
- <Button onClick={handleAdmin} color='secondary' variant="contained">Admin</Button>
-          <IconButton color="inherit">
-            <Badge badgeContent={0} color="primary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -198,8 +193,10 @@ export default function Dashboard(props) {
        <ListItemsDrawer  
         Dashboard={handleDeshboard}
          AllProduct={handleAllProduct}
-         AboutUs={handleAboutUs}   />
-       
+         AboutUs={handleAboutUs}
+         Admin={handleAdmin}
+         Logout={handleLogout}   />
+      
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

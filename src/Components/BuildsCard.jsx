@@ -42,11 +42,11 @@ export default function BuildsCard(props) {
 
       </Typography><span><h2>{JSON.stringify(project)}</h2></span>
       <Typography color="textSecondary" className={classes.depositContext}></Typography>
-      <div>
+      {/* <div>
         <Link color="primary" href="#" onClick={()=>{handleBuilds()}}>
           View Builds
         </Link>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 }

@@ -46,11 +46,11 @@ export default function RejectsCard(props) {
 
       </Typography><span><h2>{JSON.stringify(project)}</h2></span>
       <Typography color="textSecondary" className={classes.depositContext}></Typography>
-      <div>
+      {/* <div>
         <Link color="primary" href="#" onClick={()=>handleAllProduct()}>
           View Products
         </Link>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 }

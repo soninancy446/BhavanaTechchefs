@@ -35,11 +35,11 @@ const handleApproved=()=>{
 
       </Typography><span><h2>{JSON.stringify(project)}</h2></span>
       <Typography color="textSecondary" className={classes.depositContext}></Typography>
-      <div>
+      {/* <div>
         <Link color="primary" href="#" onClick={()=>{handleApproved()}}>
           View Approved
         </Link>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 }

@@ -5,6 +5,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import NotesIcon from '@material-ui/icons/Notes';
+import PersonIcon from '@material-ui/icons/Person';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import { Button } from '@material-ui/core';
 // import Dashboard from './Dashboard'
 
 export default class ListItemsDrawer extends Component{
@@ -14,6 +17,7 @@ export default class ListItemsDrawer extends Component{
          isOpen:false
     }
   }
+   
  render(){
     return(
       <div>
@@ -32,7 +36,18 @@ export default class ListItemsDrawer extends Component{
         <ListItemText primary="Products" onClick={() => this.props.AllProduct()}
                   button
                   key="Products" />
+                  
       </ListItem>
+      <ListItem button>
+        <ListItemIcon>
+          <PersonIcon />
+         
+        </ListItemIcon>
+        <ListItemText primary="Admin"  onClick={() => this.props.Admin()}
+                  button />
+      </ListItem>
+     
+     
       <ListItem button>
         <ListItemIcon>
           <PeopleIcon />
@@ -42,8 +57,11 @@ export default class ListItemsDrawer extends Component{
                   key="About Us"/>
       </ListItem>
       <ListItem button>
-      </ListItem>
-      <ListItem button>
+        <ListItemIcon>
+          <PowerSettingsNewIcon />
+        </ListItemIcon>
+        <ListItemText primary="Logout"  onClick={() => this.props.Logout()}
+                  button />
       </ListItem>
     </div>
     )
