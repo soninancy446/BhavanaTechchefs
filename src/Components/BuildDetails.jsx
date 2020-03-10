@@ -1,16 +1,20 @@
 import React, { useEffect } from 'react';
+import CloseIcon from '@material-ui/icons/Close';
+import Reactpagination from './Reactpagination'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { TextField } from '@material-ui/core';
+import { TextField, Dialog, DialogTitle, DialogContentText } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import GetAppOutlined from '@material-ui/icons/GetAppOutlined';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
 import Pagination from './Pagination'
 import { withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -24,7 +28,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItemsDrawer from './ListItemsDrawer';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -37,9 +40,17 @@ import Checkbox from '@material-ui/core/Checkbox';
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
+    
     root: {
+        
         display: 'flex',
         width: '100%',
+        fontWeight: "bold",
+       
+        margin: "10px",
+        "&:hover": {
+        }
+
     },
     container: {
         maxHeight: 440,
@@ -104,6 +115,7 @@ const useStyles = makeStyles(theme => ({
         height: '100vh',
         overflow: 'auto',
     },
+
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
@@ -174,10 +186,15 @@ export default function BuildDetails(props) {
     const [secondradionbutton, setSecondradionbutton] = React.useState(false);
     const [showpropertydetails, setshowpropertydetails] = React.useState(false);
     const [build, setBuild] = React.useState([]);
-    const [commitId,setCommtId] = React.useState();
+    const [roles, setRoles] = React.useState();
+    const [commitId, setCommtId] = React.useState();
     // const [projectName, setProjectName] = React.useState(false);
     const [productId, setproductId] = React.useState(false);
     const [Branch, setBranch] = React.useState([]);
+    const [openCard, setOpenCard] = React.useState(false)
+    const [openPaper, setOpenPaper] = React.useState(false)
+    const [approvepage, setApprovepage] = React.useState(false)
+    const [clicklistener, setClicklistener] = React.useState(true)
 
     // const handleRadioGroupChange = (value) => {
     //     console.log("roles---->", value)
@@ -185,7 +202,9 @@ export default function BuildDetails(props) {
     //         radiovalue: value
     //     })
     // }
-    const storeCommtId = (event) =>{
+
+
+    const storeCommtId = (event) => {
         setCommtId(event)
     }
     const handleBranch = (getBranch) => {
@@ -199,11 +218,11 @@ export default function BuildDetails(props) {
     };
     const handleRadioGroupChange = (value) => {
         setValue(value)
-        if(value === 1){
+        if (value === 1) {
             setSecondradionbutton(true)
         }
         else
-        setradioButton(true);
+            setradioButton(true);
     }
     const radioButtononeClick = () => {
         //setradioButton();
@@ -211,7 +230,7 @@ export default function BuildDetails(props) {
     }
     const radioButtonTwoClick = () => {
         setradioButton(true);
-   // setSecondradionbutton()
+        // setSecondradionbutton()
     }
     const handleGetProductId = (getProductId) => {
         setproductId(getProductId);
@@ -225,13 +244,20 @@ export default function BuildDetails(props) {
         console.log("GetAllProducts");
         props.history.push("/GetAllProductsComponent");
     }
-//     const handleRadioGroupChange = ()=>{
-// console.log("hi")
-//     }
+    //     const handleRadioGroupChange = ()=>{
+    // console.log("hi")
+    //     }
     const handleAboutUs = () => {
         console.log("AboutComponent");
         props.history.push("/AboutUsComponent");
     }
+    const handleAdmin=()=>{
+        props.history.push("/Admin");
+      }
+      const handleLogout=()=>{
+        props.history.push("/");
+      }
+
     const handleTrigger = (version_id) => {
         // props.history.push("/TriggerComponent");
         props.history.push({ pathname: "/TriggerComponent", state: { VersionId: version_id } })
@@ -247,61 +273,45 @@ export default function BuildDetails(props) {
             }
         }
     });
-    useEffect(() => {
-        async function fetchData(product_id) {
-            // handleGetProjectName(product_id);
-            handleGetProductId(product_id)
-            var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-                // targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build_table22'
-                targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build_table' + props.location.state.producId;
-            console.log("data");
-            const res = await fetch(proxyUrl + targetUrl)
-                .then(blob => blob.json())
-                .then(data => {
-                    console.table(data);
-                    handle(data);
-                    return data;
-                })
-                .catch(e => {
-                });
-            console.log(res);
-            console.log(product_id);
+    // useEffect(() => {
+    //     setRoles(localStorage.getItem("role"))
+    //     async function fetchData(product_id) {
+    //         // handleGetProjectName(product_id);
+    //         handleGetProductId(product_id)
+    //         var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+    //             // targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build_table22'
+    //             targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build_table' + props.location.state.producId;
+  
 
-            console.log(project);
-
-        }
-        fetchData();
-    }, []);
     const indexOfLastPage = currentPage * postPerPage;
     console.log(indexOfLastPage)
     const indexOfFirstPage = indexOfLastPage - postPerPage;
     console.log(indexOfFirstPage)
     console.log(project.length)
     const currentPosts = project.slice(indexOfFirstPage, indexOfLastPage)
-    const handleBranchData = (branch) => {
-        var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-            // targetUrl = 'http://'+ip+':8000/api/v1/workflow/rebuild/'+branch ;
-            targetUrl = 'http://' + ip + ':8000/api/v1/workflow/rebuild/master/';
-        fetch(proxyUrl + targetUrl)
-            .then(blob => blob.json())
-            .then(data => {
-                handleBranch(data);
-                // alert("Build Trigger Failed.. Response code: 400")
-                console.table(data);
-                console.log(branch);
-            })
-            .catch(e => {
-            });
-        console.log("datatatta");
+    const handleBranchData = (buttonId) => {
+        console.log(buttonId)
+        setOpenPaper(false)
     }
+    
     const openLink = (value) => {
         window.open(value, "_blank");
     }
+    const saveData = () => {
+        setOpenPaper(true)
+    }
+    const openApprovalPage = () => {
+        setOpenPaper(false)
+    }
+    const closeDialogBox = () => {
+        setApprovepage(false)
+    }
     const paginate = (pageNumber) => setCurrentPage(pageNumber)
     return (
+
         <div className={classes.root}>
             {console.log(props)}
-            {/* {console.log(props.location.state.producId)} */}
+           
             <CssBaseline />
             <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
                 <Toolbar className={classes.toolbar}>
@@ -315,7 +325,7 @@ export default function BuildDetails(props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        BuildDetails
+                        List of Builds
         </Typography>
                 </Toolbar>
             </AppBar>
@@ -335,76 +345,115 @@ export default function BuildDetails(props) {
                 <ListItemsDrawer
                     Dashboard={handleDeshboard}
                     AllProduct={handleAllProduct}
-                    AboutUs={handleAboutUs} />
+                    AboutUs={handleAboutUs} 
+                    Admin={handleAdmin}
+                    Logout={handleLogout}/>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
+
                 <Container maxWidth="lg" className={classes.container}>
 
-                    <RadioGroup aria-label="role" className="roleContents"  row  >
-                        {radioButton === false ? <FormControlLabel control={<Radio />} value="1" onClick={() => handleRadioGroupChange(1)} label={<select class="DropList" onClick={() => { handleBranchData() }}>
-                        
-                            <option value="Development">Development</option>
-                            <option value="Testing">Testing</option>
-                            <option value="staging">Staging</option>
-                            <option value="Master">Master</option>
-                        </select>} /> : ''}
-                       
-                        {secondradionbutton === false ? <FormControlLabel value="2" onClick={() => handleRadioGroupChange(2)} control={<Radio />} label={<div><TextField id="outlined-basic" label="Commit id" variant="outlined" onChange={storeCommtId} />
-                        <Button variant="primary" justifyContent='flex-end' variant="contained" onClick={()=>{handleBranchData()}}>Trigger</Button>
-                        </div>} onClick={() => { handleRadioGroupChange() }} /> : ''}
-                        
-
-
-                    </RadioGroup>
-
-
-
-
-
-                    {/* <select class="DropList" onClick={() => { handleBranchData() }}>
-                        <option value="Development">Development</option>
-                        <option value="Testing">Testing</option>
-                        <option value="staging">Staging</option>
-                        <option value="Prodution">Production</option>
-                    </select> */}
                     <Paper className={classes.root}>
+                        <div className="Dailog-box">
+                            <Dialog open={openPaper}>
+                                <DialogTitle>
+                                    Trigger BUilds
+                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                                    <CloseIcon onClick={() => { openApprovalPage() }} style={{ cursor: 'pointer'  }} />
+                               
+                                </DialogTitle>
+                                <Divider />
+                                <DialogContent >
+                                    <div className="popup">
+                                        <div className="left">
+                                            <RadioGroup aria-label="role" className="triggerBuild" row  >
+                                                {radioButton === false ? <FormControlLabel control={<Radio />} value="1" onClick={() => handleRadioGroupChange(1)} label={<select class="DropList" onClick={() => { handleBranchData(1) }}>
+
+                                                    <option value="Development">Development</option>
+                                                    <option value="Testing">Testing</option>
+                                                    <option value="staging">Staging</option>
+                                                    <option value="Master">Master</option>
+                                                </select>} /> : <FormControlLabel control={<Radio />} value="1" disabled onClick={() => handleRadioGroupChange(1)} label={<select class="DropList" disabled onClick={() => { handleBranchData(1) }}>
+
+                                                    <option value="Development">Development</option>
+                                                    <option value="Testing">Testing</option>
+                                                    <option value="staging">Staging</option>
+                                                    <option value="Master">Master</option>
+                                                </select>} />
+                                                }
+
+                                            </RadioGroup>
+                                        </div>
+                                        <div className="right">
+
+                                            {secondradionbutton === false ? <FormControlLabel value="2" onClick={() => handleRadioGroupChange(2)} control={<Radio />} label={<div><TextField id="outlined-basic" label="Commit id" variant="standard" onChange={storeCommtId} />
+                                                <Button variant="primary" justifyContent='flex-end' variant="contained" onClick={() => { handleBranchData() }}>Trigger</Button>
+                                            </div>} onClick={() => { handleRadioGroupChange() }} /> : <FormControlLabel disabled value="2" onClick={() => handleRadioGroupChange(2)} control={<Radio />} label={<div><TextField id="outlined-basic" label="Commit id" variant="standard" onChange={storeCommtId} />
+                                                <Button variant="primary" justifyContent='flex-end' variant="contained" disabled onClick={() => { handleBranchData() }}>Trigger</Button>
+                                            </div>} onClick={() => { handleRadioGroupChange() }} />}
+                                        </div>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+
+                        </div>
+                        
+
+
+
+                        
                         <TableContainer className={classes.container}>
-                            <Table ><div>
+                            <div className="main-container">
+                                {sessionStorage.getItem('role')===('admin' || 'project_manager') ?  <div className="left">
+                                    <Button variant="primary" justifyContent='flex-end' variant="contained" onClick={() => { saveData() }}>Trigger your build</Button>
+                                </div> : '' }
+                               {sessionStorage.getItem('role') === 'user' ? '' : <div className="approve">
+                                approve
+                                    
+                                    </div> }
+                                
+                                    
+                                    
+                            </div>
+                            <Table >
+                            <div>
                                 <TableHead >
+                                    
                                     <div  >
                                         <TableRow >
-                                            <TableCell className={classes.tableColumnWidth} >ProductName</TableCell>
-                                            <TableCell className={classes.tableColumnWidth}>Version</TableCell>
+                                            <TableCell className={classes.tableColumnWidth} >Products</TableCell>
+                                            
+
+                                            <TableCell className={classes.tableColumnWidth}>Builds</TableCell>
                                             <TableCell className={classes.tableColumnWidth}>Status</TableCell>
                                             <TableCell className={classes.tableColumnWidth}>Total Test</TableCell>
                                             <TableCell className={classes.tableColumnWidth}>Passed Test</TableCell>
                                             <TableCell className={classes.tableColumnWidth}>Failed Test</TableCell>
+                                        
                                             <TableCell className={classes.tableColumnWidth} style={{ textAlign: 'center' }}>NE</TableCell>
                                             <TableCell className={classes.tableColumnWidth} style={{ textAlign: 'center' }}>Download</TableCell>
                                         </TableRow>
                                     </div>
                                 </TableHead>
                                 <TableBody >
-                                    {currentPosts.map(value => (
-                                        <TableRow class="table-row">
-                                            <div hover style={{ cursor: 'pointer' }}>
-                                                <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>{value.product_name}</TableCell>
-                                                <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>{value.version_name}</TableCell>
-                                                <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>{value.properties_dict.status}</TableCell>
-                                                <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>{value.properties_dict.test_total}</TableCell>
-                                                <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>{value.properties_dict.test_passed}</TableCell>
-                                                <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>{value.properties_dict.test_failed}</TableCell>
-                                                <TableCell onClick={() => handleTrigger(value.version_id)} style={{ textAlign: 'center' }} className={classes.tableDataWidth}>{value.properties_dict.test_ne}</TableCell>
-                                                <TableCell className={classes.tableDataWidth}>
-                                                    <a onClick={() => openLink(value.properties_dict.download_url)} ><GetAppOutlined /></a></TableCell>
-                                            </div>
-                                        </TableRow>
-                                        // to={value.properties_dict.download_url}
-                                    ))}
+                                    <TableRow class="table-row">
+                                        <div hover style={{ cursor: 'pointer' }}>
+                                            <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>1</TableCell>
+                                            <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>3</TableCell>
+                                            <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>3</TableCell>
+                                            <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>4</TableCell>
+                                            <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>5</TableCell>
+                                            <TableCell onClick={() => handleTrigger(value.version_id)} className={classes.tableDataWidth}>6</TableCell>
+                
+                                            <TableCell onClick={() => handleTrigger(value.version_id)} style={{ textAlign: 'center' }} className={classes.tableDataWidth}>7</TableCell>
+                                            <TableCell className={classes.tableDataWidth}>
+                                                <a onClick={() => openLink(value.properties_dict.download_url)} ><GetAppOutlined /></a></TableCell>
+                                        </div>
+                                    </TableRow>
                                 </TableBody>
                             </div> </Table>
-                            <Pagination postsPerPage={postPerPage} totalPosts={project.length} paginate={paginate} />
+                            <Reactpagination postsPerPage={postPerPage} totalPosts={project.length} paginate={paginate} />
                         </TableContainer>
                     </Paper>
                 </Container></main>

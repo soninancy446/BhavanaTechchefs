@@ -12,23 +12,12 @@ import {Link} from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import { Button,Card } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-// import Badge from '@material-ui/core/Badge';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-// import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItemsDrawer from './ListItemsDrawer';
 import FormLabel from '@material-ui/core/FormLabel';
-// import Table from '@material-ui/core/Table';
-// import TableBody from '@material-ui/core/TableBody';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableHead from '@material-ui/core/TableHead';
-// import TableRow from '@material-ui/core/TableRow';
-// import Pagination from './Pagination'
 import Grid from '@material-ui/core/Grid';
-// import Paper from '@material-ui/core/Paper';
-// import TableContainer from '@material-ui/core/TableContainer';
-
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -131,26 +120,6 @@ const useStyles = makeStyles(theme => ({
     inputRoot: {
         color: 'inherit',
     },
-    tableColumnWidth : {
-       // table-layout: auto,
-       tableLayout: 'auto',
-        width: '170px',
-        fontWeight: 'bold',
-        fontSize: '20px'
-    },
-    tableDataWidth:  {
-       
-         width: '180px',
-     },
-    // login:{
-    //     justifycontent: 'center',
-    //     display: 'flex',
-    //     alignitems: 'center',
-    //     fontfamily: ['Times New Roman', 'Times', 'serif'],
-    //     paddingtop: '1em',
-    //     margintop: '2em',
-    //     flexwrap: 'wrap'
-    // },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 7),
         transition: theme.transitions.create('width'),
@@ -165,16 +134,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BuildDetails(props) {
-    const ip = "13.127.18.137"
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
     const [show, setShow] = React.useState(false);
     const [project, setProject] = React.useState([]);
-    const [toggleShow, settoggleShow] = React.useState(true);
-    const [showData, toggleShowData] = React.useState(true);
+   
     const [currentPage,setCurrentPage] = React.useState(1);
-    const [showpropertydetails, setshowpropertydetails] = React.useState(false);
-    const [build, setBuild] = React.useState([]);
+   
     const [projectName, setProjectName] = React.useState(false);
     const [postPerPage , setPostPerPage ] = React.useState(3);
     const handleDrawerOpen = () => {
@@ -202,6 +168,12 @@ export default function BuildDetails(props) {
         console.log("GetAllProducts");
         props.history.push("/GetAllProductsComponent");
     }
+    const handleAdmin = () => {
+        props.history.push("/Admin");
+      }
+      const handleLogout = () => {
+        props.history.push("/");
+      }
     const handleAboutUs = () => {
 
         console.log("AboutComponent");
@@ -220,35 +192,35 @@ export default function BuildDetails(props) {
           console.log("dataaaaa");
       
           // console.log(BranchId);
-          var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-            targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/approve/'+props.location.state.VersionId; 
+        //   var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+            // targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/approve/'+props.location.state.VersionId; 
             
-          fetch(proxyUrl + targetUrl)
-            .then(blob => blob.json())
-            .then(data => {
-              console.table(data);
-            })
-            .catch(e => { console.log(e); });
-            props.history.push({pathname:"/BuildDetails",state:{producId:id}
-        });
+        //   fetch(proxyUrl + targetUrl)
+        //     .then(blob => blob.json())
+        //     .then(data => {
+        //       console.table(data);
+        //     })
+        //     .catch(e => { console.log(e); });
+        //     props.history.push({pathname:"/BuildDetails",state:{producId:id}
+        // });
        
           alert(" Approved Successfully..")
       
         }
         const handleReject = (id) => {
          
-          var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-            targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/reject/'+props.location.state.VersionId; ;
+        //   var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+        //     targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/reject/'+props.location.state.VersionId; ;
            
-          fetch(proxyUrl + targetUrl)
-            .then(blob => blob.json())
-            .then(data => {
-              console.table(data);
-            })
-            .catch(e => { console.log(e); });
-            props.history.push({pathname:"/BuildDetails",state:{producId:id}
-        });
-             alert("Reject Updated!");
+        //   fetch(proxyUrl + targetUrl)
+        //     .then(blob => blob.json())
+        //     .then(data => {
+        //       console.table(data);
+        //     })
+        //     .catch(e => { console.log(e); });
+        //     props.history.push({pathname:"/BuildDetails",state:{producId:id}
+        // });
+        //      alert("Reject Updated!");
         }
        
        
@@ -297,7 +269,7 @@ export default function BuildDetails(props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                    Confirmation
+                    
         </Typography>
                 </Toolbar>
             </AppBar>
@@ -318,26 +290,31 @@ export default function BuildDetails(props) {
                 <ListItemsDrawer
                     Dashboard={handleDeshboard}
                     AllProduct={handleAllProduct}
-                    AboutUs={handleAboutUs} />
+                    AboutUs={handleAboutUs}
+                    Admin={handleAdmin}
+                    Logout={handleLogout} />
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                 <Grid direction="row" justify="left" alignItems="left">
-                <Card className="cardView">
+                <Card className="View1">
                         <div>
-                            <FormLabel component="role" style={{ fontWeight: 'bold', fontSize: 'large' }}></FormLabel>
+                            <div style={{  fontSize: 'large'  }}><center>
+                               <h2><u> <b>Build Details</b></u></h2></center></div>
                            
                         </div>
-                        <CardContent style={{ fontWeight: 'bold', fontSize: 'large', textAlign:'left'}}>
-                     {/* <b>   {project.map(value => ())}</b> */}
-                        <h3 >Build:</h3>
+                        < span style={{  fontSize: 'large', textAlign:'left', fontfamily: 'Roboto', fontsize: '2rem'}}/>
+                        {/* {project.map(value => ( */}
+                     <div style={{paddingLeft:'2px', marginLeft:'22%' }}>
+                      &nbsp;  < >Product:</>
+                      < >Build:</>
+                        {/* {value.properties_dict.version_number} */}
                         <h3>Branch:</h3>
                         <h3>Date & Time:</h3>
-                        </CardContent>
-
-                </Card>&nbsp;<div style={{ fontWeight: 'bold', fontSize: 'large', textAlign: 'center' }} >
-                
+                     </div>
+                     {/* ))} */}
+                </Card>&nbsp;<div style={{ fontSize: 'large', textAlign: 'center' }} >
                     <Button variant="contained" color="primary" onClick={() => handleApprove()}>Approve</Button>
            &nbsp; <Button variant="contained" color="Secondary" onClick={() => handleReject()}>Reject</Button>
            </div>

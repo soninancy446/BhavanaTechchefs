@@ -138,7 +138,13 @@ export default function admindashboard(props) {
   const handleAllProduct = () => {
     props.history.push("/GetAllProductsComponent");
     console.log("GetAllProducts");
-    // props.history.push("/GetAllProductsComponent");
+   
+  }
+  const handleAdmin=()=>{
+    props.history.push("/Admin");
+  }
+  const handleLogout=()=>{
+    props.history.push("/");
   }
   const handleAboutUs = () => {
 
@@ -187,7 +193,9 @@ export default function admindashboard(props) {
         <ListItemsDrawer
           Dashboard={handleDeshboard}
           AllProduct={handleAllProduct}
-          AboutUs={handleAboutUs} />
+          AboutUs={handleAboutUs} 
+          Admin={handleAdmin}
+          Logout={handleLogout} />
 
       </Drawer>
       <main className={classes.content}>

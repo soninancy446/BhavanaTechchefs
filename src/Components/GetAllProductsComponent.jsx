@@ -1,6 +1,8 @@
 
 import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
+import Snackbar from '@material-ui/core/Snackbar';
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
@@ -10,6 +12,8 @@ import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
+import CloseIcon from '@material-ui/icons/Close';
+import { DialogContent,Dialog, DialogTitle, } from '@material-ui/core';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircleOutline';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -18,6 +22,7 @@ import ListItemsDrawer from './ListItemsDrawer'
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Card from '@material-ui/core/Card'
+import {handlegetProducts} from '../Services/ServiceNew'
 import AddCircleIcon from "@material-ui/icons/AddCircleOutline";
 import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
@@ -42,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     minWidth: 275
   },
   typography: {
-    padding: theme.spacing(5),
+    padding: theme.spacing(),
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -160,7 +165,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function GetAllProductsComponent(props) {
-  const ip = "13.127.18.137"
+
+  const [snackbar, setSnackbar] = React.useState(false);
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [show, setShow] = React.useState(false);
@@ -171,6 +178,7 @@ export default function GetAllProductsComponent(props) {
   const [branch, setBranch] = React.useState([]);
   const [property1, setProperty1] = React.useState([]);
   const [showversion, setshowversion] = React.useState(false);
+  const [openPaper, setOpenPaper] = React.useState(false)
   const [showversiondetails, setshowversiondetails] = React.useState(false);
   const [showpropertydetails, setshowpropertydetails] = React.useState(false);
   const [VersionName, setVersionName] = React.useState(false);
@@ -232,36 +240,41 @@ export default function GetAllProductsComponent(props) {
   const handleBranch = (getBranch) => {
     setBranch(getBranch);
   }
+  const   SnackbarhandleClose = () => {
+    setSnackbar(false );
+  }
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const handleDeshboard = () => {
     props.history.push("/Dashboard");
     console.log("MyDashboard");
   };
-  
+  const [openAddProductDialogBoxPaper,setOpenAddProductDialogBoxPaper] =React.useState(false)
   const handleAboutUs = () => {
-
-    console.log("AboutComponent");
-
     props.history.push("/AboutUsComponent");
   }
+  const handleAdmin = () => {
+    props.history.push("/Admin");
+  }
+  const handleLogout = () => {
+    props.history.push("/");
+  }
   
-  useEffect(() => {
-    handleShow();
-    console.log("in handlegetProducts");
-    var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-      targetUrl = 'http://' + ip + ':8000/api/v1/workflow/product/'
-
-    fetch(proxyUrl + targetUrl)
-      .then(blob => blob.json())
-      .then(data => {
-        handleProject(data);
-        console.table(data);
-        return data;
-      })
-      .catch(e => {
-      });
-  },[]);
-  const handlegetProducts = () => {
+    useEffect(()=>{
+      handlegetProducts().then(res => {
+        console.log(res.clone().json())
+        return res.json()
+        //this.props.history.push('/Dashboard')
+    }).then((key) => {
+        console.log(key)
+        setProject(key)
+        console.log(key.product);
+        
+        localStorage.setItem("token",key.token)
+  
+    }).catch((err)=>{
+      console.log(err)
+    })},[]);
+  // const handlegetProducts = () => {
     // handleShow();
     // console.log("in handlegetProducts");
     // var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
@@ -276,102 +289,55 @@ export default function GetAllProductsComponent(props) {
     //   })
     //   .catch(e => {
     //   });
-  }
-  const handleBuilds1 = (product_id,product_name,version_name,branch_name) => {
-    handleGetProjectName(product_name);
-    handleVersion();
-    handleShow();
-    console.log(product_id);
-    // console.log(product_name);
+  // }
+  // const handleBuilds1 = (product_id,product_name,version_name,branch_name) => {
+  //   handleGetProjectName(product_name);
+  //   handleVersion();
+  //   handleShow();
+  //   console.log(product_id);
+  //   // console.log(product_name);
    
     
-    var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-      targetUrl = 'http://'+ip+':8000/api/v1/workflow/version/'+product_id ;
-    fetch(proxyUrl + targetUrl)
-      .then(blob => blob.json())
-      .then(data => {
-        handleBuild(data);
-        console.table(data);
-      })
-      .catch(e => {
-      });
-      console.log("datatatta");
-      var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-      targetUrl = 'http://'+ip+':8000/api/v1/workflow/property/266/';
-      // targetUrl = 'http://'+ip+':8000/api/v1/workflow/property/'+branch_name;
-      // targetUrl = 'http://' + ip + ':8000/api/v1/workflow/property/' + projectName + '/version/' + VersionName + '/branch/' + branch_name;
-      // console.log("dfsdgdfg");
-      fetch(proxyUrl + targetUrl)
-      .then(blob => blob.json())
-      .then(data => {
-        handleBranch(data);
-        handletpropertydetails();
-        
-        console.table(data);
-        console.log(branch_name);
-      })
-  }
-  
-  // const handleBranches = (product_id, version_id) => {
-  //   handleVersion();
-  //   handleVersiondetails();
-  //   handleSetVersion(version_id);
-  //   console.log(version_id);
-   
-  //   console.log("in data");
   //   var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-  //    targetUrl = 'http://' + ip + ':8000/api/v1/workflow/property/' + projectName + '/version/' + version_id; 
-  //   console.log("dfsdgdfg");
+  //     targetUrl = 'http://'+ip+':8000/api/v1/workflow/version/'+product_id ;
   //   fetch(proxyUrl + targetUrl)
+  //     .then(blob => blob.json())
+  //     .then(data => {
+  //       handleBuild(data);
+  //       console.table(data);
+  //     })
+  //     .catch(e => {
+  //     });
+  //     console.log("datatatta");
+  //     var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+  //     targetUrl = 'http://'+ip+':8000/api/v1/workflow/property/266/';
+     
+  //     fetch(proxyUrl + targetUrl)
   //     .then(blob => blob.json())
   //     .then(data => {
   //       handleBranch(data);
-  //       console.table(data);
-  //     })
-  //     .catch(e => {
-
-  //     });
-  // }
-  // const handleBranchesdetails = (branch_name) => {
-
-  //   console.log("aa");
-  //   handleSetBranch();
-  // handleShow();
-    // handleProperty();
-    // handletpropertydetails();
-    // handleSetproperty(branch_name);
-  //   console.log(branch_name);
-
-  //   var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-    //   targetUrl = 'http://' + ip + ':8000/api/v1/workflow/property/' + projectName + '/version/' + VersionName + '/branch/' + branch_name;
-    // console.log("dfsdgdfg");
-
-  //   fetch(proxyUrl + targetUrl)
-  //     .then(blob => blob.json())
-  //     .then(data => {
-  //       handleProperty(data);
-
-  //       console.log(property1);
+  //       handletpropertydetails();
         
   //       console.table(data);
-
-
+  //       console.log(branch_name);
   //     })
-  //     .catch(e => {
-
-  //       console.log(e);
-        
-
-  //     });
   // }
+  const openDialogBox =()=>{
+    setOpenAddProductDialogBoxPaper(true)
    
+  }
+  
+  const closeDialogBox =()=>{
+    setOpenAddProductDialogBoxPaper(false)
+  }
    const handleAddproduct=()=>{
-     console.log("edfe");
-     alert("Product Added");
+  console.log("hiii");
+  setSnackbar(true);
+  
+    setOpenPaper(false)
     props.history.push("/GetAllProductsComponent");
     
    }
-  
   const handleBuildDetails=(id)=>{
     console.log(id);
     
@@ -414,52 +380,59 @@ export default function GetAllProductsComponent(props) {
         <ListItemsDrawer
           Dashboard={handleDeshboard}
           AllProduct={handlegetProducts}
-          AboutUs={handleAboutUs} />
+          AboutUs={handleAboutUs}
+          Admin={handleAdmin}
+          Logout={handleLogout} />
 
       </Drawer>
-      <main className={classes.content} style={{backgroundColor: ""}} >
-        <Container maxWidth="lg" >
-       
-          <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", paddingTop: '140px' }}>
-          <PopupState variant="popper" popupId="demo-popup-popper">
-      {popupState => (
-        <div>
-          <AddCircleIcon variant="contained" color="primary" {...bindToggle(popupState)} style={{fontSize: "200px",width:'190%',height:'40',
-        alignItems:'center',justifyContent:'center'}}>
-           Products
-          </AddCircleIcon>
-          <Popper {...bindPopper(popupState)} transition>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={3}>
-                <Paper>
-                  <Typography className={classes.typography}> <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment">ProductName</InputLabel>
-        
+      <Dialog open={openAddProductDialogBoxPaper}>
+      <DialogTitle >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           <CloseIcon onClick={() => { closeDialogBox() }} style={{ cursor: 'pointer',justifyContent:'flex-end'  }} />
+                                </DialogTitle>
+                                <Divider />
+                                <DialogContent >
+                                <Typography className={classes.typography}>
+                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment">Product Name</InputLabel>
           <OutlinedInput
               endAdornment={
-              <InputAdornment position="end">
-              </InputAdornment>
+              <InputAdornment position="end"></InputAdornment>
             }
-            labelWidth={70}/>&nbsp;<Button  color='primary' variant="contained" onClick={()=>handleAddproduct()}>Submit</Button>
-        </FormControl>.</Typography>  
-                </Paper> 
-              </Fade>
-            )}
-          </Popper>
-        </div>
-      )}
-    </PopupState><span class="iconify" data-icon="mdi-minus-circle-outline" data-inline="false"></span>
+  labelWidth={70}/>&nbsp;<Button  color='primary' variant="contained" 
+  onClick={()=>handleAddproduct()}>Submit</Button>
+        </FormControl>.</Typography> 
+                                </DialogContent>
+                            </Dialog>
+
+      <main className={classes.content}  >
+        <Container maxWidth="lg" >
+       
+          <div style={{ display: "flex", justifyContent: "flex-end", fontSize:'large', paddingTop: '100px' }}>
+          
+          <div >
+          <AddCircleIcon onClick={()=>{openDialogBox()}} style={{fontSize: "200px",width:'190%',height:'40'}}>
+           Products
+          </AddCircleIcon>
+          </div>
+     <div 
+     style={{display:'flex',justifyContent:"space-between"}}>
+    </div> 
             {show ? project.map(value => (
-              <div style={{display:'flex',flexDirection:'row',justifyContent:"space-between"}} onClick={()=>handleBuildDetails(value.id)} props={props}><ul>
+              <div  onClick={()=>handleBuildDetails(value.id)} props={props}><ul>
                 <b>
                  <Grid item xs={12} md={4} lg={3}>
-                  <Paper className={classes.root} > <CardContent> <Typography className={classes.title} color="textSecondary" gutterBottom>
-                  </Typography> {value.product_name}</CardContent></Paper> </Grid>
+                  <Paper className={classes.root} > <CardContent> 
+                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                  </Typography> {value.product_name}
+                  </CardContent>
+                  </Paper> </Grid>
                   </b> 
               </ul> 
             {console.log(value.id)
             }</div>
             )) : null
+            }
+            {console.log(project)
             }
 
           </div>
@@ -468,6 +441,10 @@ export default function GetAllProductsComponent(props) {
       </main>
       <div>
       </div>
-    </div>
+      <Snackbar 
+        open={snackbar  }
+        onClose={SnackbarhandleClose} message="Product Added"
+         />
+                </div>
   );
 }

@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar'
 import { Toolbar } from '@material-ui/core';
-import login from '../Services/service'
+import {login} from '../Services/ServiceNew'
 
 class Login extends Component {
 
@@ -32,16 +32,9 @@ class Login extends Component {
 
 
     handleSubmit = () => {
-        const userLoginDetails = {
-
-            "email": this.state.email,
-            "password": this.state.password,
-        }
-        console.log("login", userLoginDetails)
         login(this.state.email, this.state.password).then(res => {
             console.log(res.clone().json())
             return res.json()
-            //this.props.history.push('/Dashboard')
         }).then((key) => {
             console.log(key)
             this.setState({
@@ -50,11 +43,7 @@ class Login extends Component {
             })
             console.log("token---->", this.state.token)
             console.log("role--->", this.state.role)
-            localStorage.setItem("token--->",this.state.token)
-            localStorage.getItem("token--->",this.state.token)
-            // sessionStorage.setItem("token", this.state.token)
-            // sessionStorage("role", this.state.role)
-            // console.log("role---->", sessionStorage.getItem("token"))
+            sessionStorage.setItem("token",this.state.token)
             this.props.history.push('/Dashboard')
         }).catch((err) => {
             //this.props.history.push('/Dashboard')

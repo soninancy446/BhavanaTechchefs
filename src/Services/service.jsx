@@ -6,18 +6,18 @@ const headers={
     
 }
 const ip = "13.127.18.137"
-export default function login(emailId,password) {
-   //console.log(userLoginDetails)
+export  function login(emailId,password) {
+   console.log(emailId,password)
    var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
    targetUrl='http://13.127.18.137:888/api/v1/workflow/login/'
 
    
    console.log(proxyUrl+targetUrl+emailId+'/'+password+'/')
-   return fetch(proxyUrl+targetUrl+emailId+'/'+password+'/', { method: 'post',headers: {
+   return fetch(proxyUrl+targetUrl+emailId+'/'+password+'/', { headers: {
     "Content-Type": "application/json"
   } });
 }
-export function addUser(username,email,password,roleid,checkedItems) {
+export default function addUser(username,email,password,roleid,checkedItems) {
     console.log("in getUsersMethod")
     var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
     targetUrl = 'http://13.127.18.137:888/api/v1/workflow/createuser/'
@@ -50,6 +50,16 @@ export  function getUsers() {
     console.log(proxyUrl+targetUrl)
      return fetch(proxyUrl+targetUrl, { headers: headers });
  }
- export function getUserData() {
-    
+ export function getProductCount() {
+    var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+    targetUrl = 'http://13.127.18.137:888/api/v1/workflow/productcount/'
+    return fetch(proxyUrl+targetUrl, { method : 'get' ,headers: headers,
+     body: JSON.stringify({
+
+        
+        token: localStorage.getItem('token')
+      })
+     });
+// http --json POST   http://13.127.18.137:888/api/v1/workflow/productcount/ 'Authorization: JWT $token 
+
 }

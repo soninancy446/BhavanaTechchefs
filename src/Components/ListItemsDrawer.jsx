@@ -21,6 +21,7 @@ export default class ListItemsDrawer extends Component{
  render(){
     return(
       <div>
+        <div>
       <ListItem button>
         <ListItemIcon>
           <DashboardIcon />
@@ -29,6 +30,8 @@ export default class ListItemsDrawer extends Component{
         <ListItemText primary="Dashboard"  onClick={() => this.props.Dashboard()}
                   button />
       </ListItem>
+      </div>
+      <div>
       <ListItem button>
         <ListItemIcon>
           <NotesIcon />
@@ -38,6 +41,8 @@ export default class ListItemsDrawer extends Component{
                   key="Products" />
                   
       </ListItem>
+      </div>
+      <div>
       <ListItem button>
         <ListItemIcon>
           <PersonIcon />
@@ -46,8 +51,8 @@ export default class ListItemsDrawer extends Component{
         <ListItemText primary="Admin"  onClick={() => this.props.Admin()}
                   button />
       </ListItem>
-     
-     
+     </div>
+     <div>
       <ListItem button>
         <ListItemIcon>
           <PeopleIcon />
@@ -55,14 +60,17 @@ export default class ListItemsDrawer extends Component{
         <ListItemText primary="About  Us"  onClick={() => this.props.AboutUs()}
                   button
                   key="About Us"/>
-      </ListItem>
+      </ListItem></div>
+      <div>
       <ListItem button>
         <ListItemIcon>
           <PowerSettingsNewIcon />
         </ListItemIcon>
         <ListItemText primary="Logout"  onClick={() => this.props.Logout()}
                   button />
+                  
       </ListItem>
+      </div>
     </div>
     )
   }

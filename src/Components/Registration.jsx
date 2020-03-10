@@ -17,7 +17,9 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItemsDrawer from './ListItemsDrawer';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import UserRegistration from './UserRegistration'
 const drawerWidth = 240;
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -127,11 +129,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function GetAllProductsComponent(props) {
-
-  console.log(props.location);
-  
-  const classes = useStyles();
+export default function Registration(props) {
+    const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -147,81 +146,74 @@ export default function GetAllProductsComponent(props) {
   const handleAllProduct = () => {
 
     console.log("GetAllProducts");
-    props.history.push("/GetAllProductsComponent");
+props.history.push("/GetAllProductsComponent");
   }
-  const handleAboutUs = () => {
+  const handleAboutUs=()=>{
 
     console.log("AboutComponent");
 
     props.history.push("/AboutUsComponent");
   }
-  const handleAdmin = () => {
-
-    console.log("Admin");
-
+  const handleAdmin=()=>{
     props.history.push("/Admin");
   }
-  const handleLogout = () => {
-
-    console.log("Logout");
-
+  const handleLogout=()=>{
     props.history.push("/");
   }
-
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            About Us
+    <CssBaseline />
+    <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+      <Toolbar className={classes.toolbar}>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerOpen}
+          className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+         Registration
         </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={0} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <ListItemsDrawer
-          Dashboard={handleDeshboard}
-          AllProduct={handleAllProduct}
-          AboutUs={handleAboutUs} 
-          Admin={handleAdmin}
-          Logout={handleLogout}/>
-
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid item xs={12} md={4} lg={3}>
-            <Paper className={fixedHeightPaper}>
-
-            </Paper>
-          </Grid></Container></main>
+        
+      </Toolbar>
+    </AppBar>
+    <Drawer
+      variant="permanent"
+      classes={{
+        paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+      }}
+      open={open}
+    >
+      <div className={classes.toolbarIcon}>
+        <IconButton onClick={handleDrawerClose}>
+          <ChevronLeftIcon />
+        </IconButton>
+      </div>
+      <Divider />
+     <ListItemsDrawer 
+       Dashboard={handleDeshboard}
+       AllProduct={handleAllProduct}
+       AboutUs={handleAboutUs}
+       Admin={handleAdmin}
+       Logout={handleLogout}   />
+     
+    </Drawer>
+   <main className={classes.content}>
+      <div className={classes.appBarSpacer} />
+      <Container maxWidth="lg" className={classes.container}>
+      <div className="regis">
+      <Grid item xs={12} md={4} lg={3}>
+        
+      <UserRegistration />
+          </Grid>
+          </div>
+          </Container>
+         </main>
+   
     </div>
-
-  );
+ 
+);
 }

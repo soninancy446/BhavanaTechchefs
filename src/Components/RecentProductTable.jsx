@@ -45,66 +45,66 @@ export default function RecentProductTable(props) {
   const[RejectBuild,setRejectBuild]=React.useState([]);
   const [show, setShow] = React.useState(false);
   const [showData, setShowData] = React.useState(false);
-  useEffect(() => {
-    async function fetchData() {
-      var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-        targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/latest_versions/'
-      const res = await fetch(proxyUrl + targetUrl)
-      res
-        .json()
-        .then(res => {
-          console.log(res);
-          setProject(res);
+//   useEffect(() => {
+//     async function fetchData() {
+//       var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+//         targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/latest_versions/'
+//       const res = await fetch(proxyUrl + targetUrl)
+//       res
+//         .json()
+//         .then(res => {
+//           console.log(res);
+//           setProject(res);
 
-        })
-        .catch(err => setShow(err));
-    }
-    fetchData();
-  }, []);
-  useEffect(() => {
-    async function fetchData() {
-      var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-        targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/approved/'
-      const res = await fetch(proxyUrl + targetUrl)
-      res
-        .json()
-        .then(res => {
-          console.log(res);
-          setBuild(res);
+//         })
+//         .catch(err => setShow(err));
+//     }
+//     fetchData();
+//   }, []);
+//   useEffect(() => {
+//     async function fetchData() {
+//       var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+//         targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/approved/'
+//       const res = await fetch(proxyUrl + targetUrl)
+//       res
+//         .json()
+//         .then(res => {
+//           console.log(res);
+//           setBuild(res);
 
-        })
-        .catch(err => setShow(err));
-    }
-    fetchData();
-  }, []);
-  useEffect(() => {
-    async function fetchData() {
-      var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-        targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/rejected/'
-      const res = await fetch(proxyUrl + targetUrl)
-      res
-        .json()
-        .then(res => {
-          console.log(res);
-          setRejectBuild(res);
+//         })
+//         .catch(err => setShow(err));
+//     }
+//     fetchData();
+//   }, []);
+//   useEffect(() => {
+//     async function fetchData() {
+//       var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+//         targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/rejected/'
+//       const res = await fetch(proxyUrl + targetUrl)
+//       res
+//         .json()
+//         .then(res => {
+//           console.log(res);
+//           setRejectBuild(res);
 
-        })
-        .catch(err => setShow(err));
-    }
-    fetchData();
-  }, []);
+//         })
+//         .catch(err => setShow(err));
+//     }
+//     fetchData();
+//   }, []);
   
-  const handleShowData = () => {
-    setShowData(!showData);
-  };
-const preventDefault=()=>{
-  props.props.history.push("/BuildData");
-}
+//   const handleShowData = () => {
+//     setShowData(!showData);
+//   };
+// const preventDefault=()=>{
+//   props.props.history.push("/BuildData");
+// }
   
   return (
     <React.Fragment>
       <div style={{display:'flex',flexDirection:'row',padding:'2px',margin:'3px',justifyContent:"space-between"}}>
-        <Grid item xs={12} md={4} lg={4}>
+        <Grid item xs={12} md={3} lg={4}>
               <Paper className={fixedHeightPaper}>
       <Title>Recent Builds</Title> <Typography color="textSecondary" className={classes.depositContext}></Typography>
       <Table size="small">
@@ -124,8 +124,8 @@ const preventDefault=()=>{
             </TableRow>
           ))}
         </TableBody>
-      </Table></Paper></Grid>
-      <Grid item xs={12} md={4} lg={4}>
+      </Table></Paper></Grid>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <Grid item xs={12} md={3} lg={4}>
               <Paper className={fixedHeightPaper}> <Title>Approved Builds</Title>
       <Table size="small">
         <TableHead>
@@ -144,8 +144,8 @@ const preventDefault=()=>{
             </TableRow>
           ))}
         </TableBody>
-      </Table></Paper></Grid>
-      <Grid item xs={12} md={4} lg={3}>
+      </Table></Paper></Grid>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <Grid item xs={12} md={3} lg={4}>
         <Paper className={fixedHeightPaper}> <Title>Rejected Builds</Title>
       <Table size="small">
         <TableHead>
@@ -165,11 +165,6 @@ const preventDefault=()=>{
           ))}
         </TableBody>
       </Table></Paper></Grid></div>
-      {/* <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more Builds
-        </Link>
-      </div> */}
       
     </React.Fragment>
   );

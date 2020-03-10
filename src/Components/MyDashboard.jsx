@@ -194,6 +194,7 @@ export default function Dashboard(props) {
         Dashboard={handleDeshboard}
          AllProduct={handleAllProduct}
          AboutUs={handleAboutUs}
+         
          Admin={handleAdmin}
          Logout={handleLogout}   />
       

@@ -13,11 +13,19 @@ import { Card } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { getAllProducts } from '../Services/Services'
+import { getAllProducts } from '../Services/ServiceNew'
 import { Paper } from '@material-ui/core';
-import { addUser } from '../Services/Services'
+import { addUser } from '../Services/ServiceNew'
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import Drawer from '@material-ui/core/Drawer';
+import MenuIcon from '@material-ui/icons/Menu';
+import IconButton from '@material-ui/core/IconButton';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import Divider from '@material-ui/core/Divider';
+import ListItemsDrawer from './ListItemsDrawer'
+// import SideNav from './SideNav'
+
 
 class UserRegistration extends Component {
     constructor(props) {
@@ -31,7 +39,8 @@ class UserRegistration extends Component {
             checked: [],
             checkedItems: [],
             roleId: '',
-            openDialog: false
+           
+            drwerOpen : true
 
         }
         //this.handleChange = this.handleChange.bind(this);
@@ -99,6 +108,11 @@ class UserRegistration extends Component {
 
     }
 
+    handleDrawerOpen =()=>{
+this.setState({
+    drwerOpen : true
+})
+    }
     handleChangeCheckBox = (event) => {
         this.setState = {
             checked: event.target.value
@@ -134,12 +148,29 @@ class UserRegistration extends Component {
             roleId: value
         })
     }
-
+    handleDrawerClose =()=>{
+        this.setState({
+            drwerOpen : false
+        })
+    }
     openDialogBox = () => {
         this.setState({
             openDialog: !this.state.openDialog,
         })
     }
+    handleDrawerOpen = () => {
+        if (this.state.drwaerOpen === false) {
+            this.setState({
+                drwaerOpen: true,
+            })
+        }
+        else {
+            this.setState({
+                drwaerOpen: false,
+            })
+        }
+    }
+
     render() {
 
         // <option key={indx} value={item.product_name}>{item.product_name}</option>
@@ -154,14 +185,7 @@ class UserRegistration extends Component {
         })
         return (
             <div >
-                <AppBar position="absolute" >
-                    <Toolbar>
-                        <Typography variant="h4" className='title' >
-                            Registration
-                            </Typography>
-                    </Toolbar>
-                </AppBar>
-
+         
 
                 <div className="page">
                     <Card className="cardView">
@@ -229,7 +253,6 @@ class UserRegistration extends Component {
                                 <Card class="card">
                                     <div className="rules">Types Of Rules</div>
                                     <RadioGroup aria-label="role" value={this.value} className="roleContents" row>
-
                                         <FormControlLabel value="1" control={<Radio />} label="Admin" onClick={() => this.handleRadioGroupChange(1)} />
                                         <FormControlLabel value="2" control={<Radio />} label="PM" onClick={() => this.handleRadioGroupChange(2)} />
                                         <FormControlLabel value="3" control={<Radio />} label="Org_Lead" onClick={() => this.handleRadioGroupChange(3)} />
