@@ -11,10 +11,23 @@ const Reactpagination = ({ postsPerPage, totalPosts, paginate }) => {
 const pagenumber =  Math.ceil(totalPosts / postsPerPage)
   console.log("pagination-->",pageNumbers.length)
     return (
-   
+    //   <nav>
+    //     <ul className='pagination'>
+        //   {pageNumbers.map(number => (
+        //     <li key={number} className='page-item'>
+        //       <a onClick={() => paginate(number)} className='page-link'>
+        //         {number}
+                
+        //       </a>
+    //         </li>
+    //       ))}
+          
+    //     </ul>
+    //   </nav>
        <Pagination  size="small"  />
        
     );
   };
   
   export default Reactpagination;
+  

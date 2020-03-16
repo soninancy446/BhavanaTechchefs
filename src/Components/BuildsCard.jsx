@@ -11,24 +11,44 @@ const useStyles = makeStyles({
   },
 });
 export default function BuildsCard(props) {
+  
   const [project, setProject] = React.useState([]);
   const [show, setShow] = React.useState(false);
   const [showData, setShowData] = React.useState(false);
 
   useEffect(() => {
-
+console.log("here is props",props)
     getBuildsCount().then((res)=>{
-      console.log(res.clone().json())
-return res.json()
+      if (res.status == '401') {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('role')
+        props.history.push('/')
+    }
+    else {
+        console.log(res.clone().json())
+        
+        return res.json()
+    }
     }).then((key)=>{
       console.log("key-->",key)
       console.log("key-->",key)
       setProject(key)
+      sessionStorage.setItem('numberofbuilds',key)
       console.log("key-->",project)
-    })
+    }).catch((err)=>{
+      
+  })
   },[]);
 
- 
+  const handleShowData = () => {
+    setShowData(!showData);
+  };
+  const handleBuilds=()=>{
+    
+    props.props.history.push("/BuildData");
+  // props.history.push("/BuildDetails")
+
+  }
   const classes = useStyles();
   return (
     <React.Fragment>

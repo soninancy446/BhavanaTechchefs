@@ -25,6 +25,7 @@ import ApprovedCard from './ApprovedCard';
 import BuildsCard from './BuildsCard';
 import RecentProductTable from './RecentProductTable';
 import RejectedCard from './RejectedCard'
+import {isValidUser} from '../Services/ServiceNew'
 
 function Copyright() {
   return (
@@ -44,6 +45,9 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
+  },
+  username : {
+    fontSize: '1.2rem'
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -77,7 +81,7 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 0.9,
   },
   drawerPaper: {
     position: 'relative',
@@ -151,9 +155,12 @@ export default function Dashboard(props) {
     props.history.push("/AboutUsComponent");
   }
   const handleAdmin=()=>{
+    
     props.history.push("/Admin");
   }
   const handleLogout=()=>{
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('role')
     props.history.push("/");
   }
   return (
@@ -173,6 +180,9 @@ export default function Dashboard(props) {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Dashboard
           </Typography>
+          <Typography className={classes.username} componnet="h2">
+          Hi,{sessionStorage.getItem('name')}
+        </Typography>
           {/* <TextField id="outlined-basic" label="Commit id" variant="outlined" /> */}
       {/* vonClick={()=>{handleAdmin()}}    */}
         </Toolbar>

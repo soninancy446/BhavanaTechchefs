@@ -13,18 +13,32 @@ const useStyles = makeStyles({
 
 export default function RejectsCard(props) {
   const [project, setProject] = React.useState([]);
-
+  const [show, setShow] = React.useState(false);
+  const [showData, setShowData] = React.useState(false);
   useEffect(() => {
     getRejectedBuildsCount().then((res)=>{
-      console.log(res.clone().json())
-      return res.json()
+      if (res.status == '401') {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('role')
+        props.history.push('/')
+      }
+    else{
+        console.log(res.clone().json())
+    return res.json()
+    }
+     
     }).then((key)=>{
       setProject(key)
       console.log("rejectbuild",key)
-    })
+    }).catch((err)=>{
+      
+  })
    
-  }, []);
+}, []);
   
+  const handleRejected=()=>{
+    props.props.history.push("/RejectedData")
+  }
   const classes = useStyles();
   return (
     <>
@@ -33,7 +47,7 @@ export default function RejectsCard(props) {
 
       </Typography><span><h2>{JSON.stringify(project)}</h2></span>
       <Typography color="textSecondary" className={classes.depositContext}></Typography>
-    
+      
     </>
   );
 }

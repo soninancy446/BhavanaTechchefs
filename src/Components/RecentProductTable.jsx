@@ -12,6 +12,7 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import clsx from 'clsx';
+import {getLatestBuilds,getApprovedBuilds,getRejectedBuilds} from '../Services/ServiceNew'
 const rows = [];
 
 function preventDefault(event) {
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   },
   fixedHeight: {
 
-    height: 240,
+    height: 260,
   },
   paper: {
     padding: theme.spacing(2),
@@ -45,82 +46,95 @@ export default function RecentProductTable(props) {
   const[RejectBuild,setRejectBuild]=React.useState([]);
   const [show, setShow] = React.useState(false);
   const [showData, setShowData] = React.useState(false);
-//   useEffect(() => {
-//     async function fetchData() {
-//       var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-//         targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/latest_versions/'
-//       const res = await fetch(proxyUrl + targetUrl)
-//       res
-//         .json()
-//         .then(res => {
-//           console.log(res);
-//           setProject(res);
 
-//         })
-//         .catch(err => setShow(err));
-//     }
-//     fetchData();
-//   }, []);
-//   useEffect(() => {
-//     async function fetchData() {
-//       var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-//         targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/approved/'
-//       const res = await fetch(proxyUrl + targetUrl)
-//       res
-//         .json()
-//         .then(res => {
-//           console.log(res);
-//           setBuild(res);
-
-//         })
-//         .catch(err => setShow(err));
-//     }
-//     fetchData();
-//   }, []);
-//   useEffect(() => {
-//     async function fetchData() {
-//       var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-//         targetUrl = 'http://' + ip + ':8000/api/v1/workflow/build/rejected/'
-//       const res = await fetch(proxyUrl + targetUrl)
-//       res
-//         .json()
-//         .then(res => {
-//           console.log(res);
-//           setRejectBuild(res);
-
-//         })
-//         .catch(err => setShow(err));
-//     }
-//     fetchData();
-//   }, []);
   
-//   const handleShowData = () => {
-//     setShowData(!showData);
-//   };
-// const preventDefault=()=>{
-//   props.props.history.push("/BuildData");
-// }
+
+  useEffect(() => {
+    getLatestBuilds().then((res)=>{
+      if (res.status == '401') {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('role')
+        props.history.push('/')
+      }
+    else{
+        console.log(res.clone().json())
+    return res.json()
+    }
+      // console.log(res.clone().json())
+      
+      // return res.json()
+    }).then((key)=>{
+      setProject(key);
+    }).catch((err)=>{
+      
+  })}, []);
+  useEffect(() => {
+    getApprovedBuilds().then((res)=>{
+      if (res.status == '401') {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('role')
+        props.history.push('/')
+      }
+      else{
+      console.log(res.clone().json())
+      return res.json()
+      }
+    }).then((key)=>{
+      setBuild(key)
+    }).catch((err)=>{
+      
+  })
+  }, []);
+  useEffect(() => {
+    getRejectedBuilds().then((res)=>{
+      if (res.status == '401') {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('role')
+        props.history.push('/')
+      }
+    else{
+        console.log(res.clone().json())
+    return res.json()
+    }
+    }).then((key)=>{
+      setRejectBuild(key)
+      console.log("key------->",key)
+    }).catch((err)=>{
+      
+  })
+
+   
+   
+  }, []);
+  
+  const handleShowData = () => {
+    setShowData(!showData);
+  };
+const preventDefault=()=>{
+  props.props.history.push("/BuildData");
+}
   
   return (
+    
     <React.Fragment>
       <div style={{display:'flex',flexDirection:'row',padding:'2px',margin:'3px',justifyContent:"space-between"}}>
-        <Grid item xs={12} md={3} lg={4}>
+        {console.log(project.lentgh)}
+        <Grid item xs={12} md={5} lg={4} >
               <Paper className={fixedHeightPaper}>
       <Title>Recent Builds</Title> <Typography color="textSecondary" className={classes.depositContext}></Typography>
       <Table size="small">
         <TableHead>
           <TableRow>
-
             <TableCell>Products</TableCell>
             <TableCell>Builds</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {project.map(row => (
+          
+          {project === 'Token Expired..!!' ? '': project.map(row => ( 
             <TableRow key={row.id}>
-
               <TableCell>{row.product_name}</TableCell>
-              <TableCell>{row.version_name}</TableCell>
+              <TableCell>{row.build_name}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -136,11 +150,10 @@ export default function RecentProductTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Build.map(row => (
+          {Build === 'Token Expired..!!' ? '' : Build.map(row => ( row === null ? '':
             <TableRow key={row.id}>
-
-              <TableCell>{row.properties_dict.product_name}</TableCell>
-              <TableCell>{row.properties_dict.version_number}</TableCell>
+              <TableCell>{row.product_name}</TableCell>
+              <TableCell>{row.build_name}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -156,15 +169,20 @@ export default function RecentProductTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {RejectBuild.map(row => (
+          {RejectBuild === 'Token Expired..!!' ? '' : RejectBuild.map(row => ( row === null ? '':
             <TableRow key={row.id}>
 
-              <TableCell>{row.properties_dict.product_name}</TableCell>
-              <TableCell>{row.properties_dict.version_number}</TableCell>
+              <TableCell>{row.product_name}</TableCell>
+              <TableCell>{row.build_name}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table></Paper></Grid></div>
+      {/* <div className={classes.seeMore}>
+        <Link color="primary" href="#" onClick={preventDefault}>
+          See more Builds
+        </Link>
+      </div> */}
       
     </React.Fragment>
   );

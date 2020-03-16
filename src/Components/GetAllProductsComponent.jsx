@@ -1,8 +1,16 @@
 
 import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Snackbar from '@material-ui/core/Snackbar';
+import CardHeader from '@material-ui/core/CardHeader';
 
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
+
+
+import Tooltip from '@material-ui/core/Tooltip';
+import Snackbar from '@material-ui/core/Snackbar';
+import { getProduct } from '../Services/ServiceNew'
+import { addProduct } from '../Services/ServiceNew'
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
@@ -13,7 +21,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import CloseIcon from '@material-ui/icons/Close';
-import { DialogContent,Dialog, DialogTitle, } from '@material-ui/core';
+import { DialogContent, Dialog, DialogTitle, FilledInput, } from '@material-ui/core';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircleOutline';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -22,7 +30,7 @@ import ListItemsDrawer from './ListItemsDrawer'
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Card from '@material-ui/core/Card'
-import {handlegetProducts} from '../Services/ServiceNew'
+import { getProducts } from '../Services/ServiceNew'
 import AddCircleIcon from "@material-ui/icons/AddCircleOutline";
 import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
@@ -43,11 +51,6 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    flexDirection:'row',
-    minWidth: 275
-  },
-  typography: {
-    padding: theme.spacing(),
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -81,8 +84,7 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   title: {
-    flexGrow: 1,
-    // fontSize: 14,
+    flexGrow: 0.9,
   },
   drawerPaper: {
     position: 'relative',
@@ -124,6 +126,9 @@ const useStyles = makeStyles(theme => ({
 
     height: 240,
   },
+  title : {
+    fontSize: 'large'
+  },
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -138,18 +143,8 @@ const useStyles = makeStyles(theme => ({
       width: 'auto',
     },
   },
-  searchIcon: {
-    width: theme.spacing(7),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   inputRoot: {
     color: 'inherit',
-    margin: theme.spacing(2),
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
@@ -182,15 +177,27 @@ export default function GetAllProductsComponent(props) {
   const [showversiondetails, setshowversiondetails] = React.useState(false);
   const [showpropertydetails, setshowpropertydetails] = React.useState(false);
   const [VersionName, setVersionName] = React.useState(false);
-  const [BranchName,setBranchName]=React.useState(false);
+  const [BranchName, setBranchName] = React.useState(false);
   const [propertyName, setpropertyhName] = React.useState(false);
+  const [alert,setAlert] = React.useState({open : false, message : "",backgroundColor:""})
+  let projects = [
+    {
+      product_name: 'abc'
+    },
+    {
+      product_name: 'def'
+    },
+    {
+      product_name: 'def'
+    }
+  ]
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleSetVersion = (getversion) => {
     setVersionName(getversion);
   }
-  const handleSetBranch=(getbranch)=>{
+  const handleSetBranch = (getbranch) => {
     setBranchName(getbranch);
   }
   const handleSetproperty = (getproperty) => {
@@ -204,7 +211,7 @@ export default function GetAllProductsComponent(props) {
     console.log(showversion);
   };
   const handleProperty = (getProperty) => {
-    console.log(getProperty);  
+    console.log(getProperty);
     setProperty1(getProperty);
     console.log(property1.version_number);
   }
@@ -240,109 +247,124 @@ export default function GetAllProductsComponent(props) {
   const handleBranch = (getBranch) => {
     setBranch(getBranch);
   }
-  const   SnackbarhandleClose = () => {
-    setSnackbar(false );
+  const SnackbarhandleClose = () => {
+    setSnackbar(false);
   }
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const handleDeshboard = () => {
+
+    ////validation api call and logout
+
     props.history.push("/Dashboard");
     console.log("MyDashboard");
   };
-  const [openAddProductDialogBoxPaper,setOpenAddProductDialogBoxPaper] =React.useState(false)
+  const [openAddProductDialogBoxPaper, setOpenAddProductDialogBoxPaper] = React.useState(false)
   const handleAboutUs = () => {
+
+    ////validation api call and logout
+
     props.history.push("/AboutUsComponent");
   }
   const handleAdmin = () => {
+
+    ////validation api call and logout
+
     props.history.push("/Admin");
   }
   const handleLogout = () => {
+
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('role')
     props.history.push("/");
   }
-  
-    useEffect(()=>{
-      handlegetProducts().then(res => {
+
+  const [createProductName, setCreateproductname] = React.useState('');
+
+
+  const addSinglProduct = () => {
+    setOpenAddProductDialogBoxPaper(false);
+    console.log(createProductName)
+
+    //validation api call and logout
+
+    addProduct(createProductName).then(res => {
+      console.log("respone-->",)
+      if (res.status == '401') {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('role')
+        props.history.push('/')
+      }
+      else {
+        setCreateproductname('')
         console.log(res.clone().json())
         return res.json()
-        //this.props.history.push('/Dashboard')
-    }).then((key) => {
-        console.log(key)
-        setProject(key)
-        console.log(key.product);
-        
-        localStorage.setItem("token",key.token)
-  
-    }).catch((err)=>{
-      console.log(err)
-    })},[]);
-  // const handlegetProducts = () => {
-    // handleShow();
-    // console.log("in handlegetProducts");
-    // var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-    //   targetUrl = 'http://' + ip + ':8000/api/v1/workflow/product/'
+      }
 
-    // fetch(proxyUrl + targetUrl)
-    //   .then(blob => blob.json())
-    //   .then(data => {
-    //     handleProject(data);
-    //     console.table(data);
-    //     return data;
-    //   })
-    //   .catch(e => {
-    //   });
-  // }
-  // const handleBuilds1 = (product_id,product_name,version_name,branch_name) => {
-  //   handleGetProjectName(product_name);
-  //   handleVersion();
-  //   handleShow();
-  //   console.log(product_id);
-  //   // console.log(product_name);
-   
-    
-  //   var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-  //     targetUrl = 'http://'+ip+':8000/api/v1/workflow/version/'+product_id ;
-  //   fetch(proxyUrl + targetUrl)
-  //     .then(blob => blob.json())
-  //     .then(data => {
-  //       handleBuild(data);
-  //       console.table(data);
-  //     })
-  //     .catch(e => {
-  //     });
-  //     console.log("datatatta");
-  //     var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-  //     targetUrl = 'http://'+ip+':8000/api/v1/workflow/property/266/';
-     
-  //     fetch(proxyUrl + targetUrl)
-  //     .then(blob => blob.json())
-  //     .then(data => {
-  //       handleBranch(data);
-  //       handletpropertydetails();
-        
-  //       console.table(data);
-  //       console.log(branch_name);
-  //     })
-  // }
-  const openDialogBox =()=>{
-    setOpenAddProductDialogBoxPaper(true)
-   
+    }).then((key) => {
+      console.log(key)
+     setAlert({open : true,message: "Product Added Successfully",backgroundColor:"#4BB543"})
+      getProd()
+    }).catch((err) => {
+      setAlert({open : true,message: "Something Went Wrong",backgroundColor:"#4BB543"})
+    })
+    console.log(openAddProductDialogBoxPaper);
+    console.log(openPaper);
   }
-  
-  const closeDialogBox =()=>{
+  const handleProductChange = (value1) => {
+    setCreateproductname(value1);
+    console.log(value1)
+  }
+
+  const [product, setproduct] = React.useState();
+  const openDialogBox = () => {
+    setOpenAddProductDialogBoxPaper(true)
+
+  }
+
+  const closeDialogBox = () => {
     setOpenAddProductDialogBoxPaper(false)
   }
-   const handleAddproduct=()=>{
-  console.log("hiii");
-  setSnackbar(true);
-  
-    setOpenPaper(false)
-    props.history.push("/GetAllProductsComponent");
-    
-   }
-  const handleBuildDetails=(id)=>{
+  useEffect(() => {
+
+    //validation api call and logout
+      getProd()
+
+
+  }, [])
+
+  const getProd = () => {
+    getProducts().then(res => {
+      console.log("respone-->",res)
+      if (res.status == '401') {
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('role')
+        props.history.push('/')
+      }
+      else {
+        console.log(res.clone().json())
+        return res.json()
+      }
+      // console.log(res.clone().json())
+      // return res.json()
+
+    }).then((key) => {
+      console.log(key)
+
+      setProject(key)
+      console.log(key.product_name);
+
+    }).catch((err) => {
+      console.log()
+console.log(err)
+    })
+  }
+  const handlegetProducts = () => {
+  }
+  const handleBuildDetails = (id, productname) => {
     console.log(id);
-    
-    props.history.push({pathname:"/BuildDetails",state:{producId:id}
-  });
+    props.history.push({
+      pathname: "/BUildDetails", state: { producId: id, productName: productname }
+    });
   }
 
   return (
@@ -359,9 +381,12 @@ export default function GetAllProductsComponent(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+          <Typography component="h1" variant="h6" color="inherit" noWrap style={{ flexGrow : '0.9'}}>
             Products
           </Typography>
+          <Typography className={classes.username} componnet="h2">
+          Hi,{sessionStorage.getItem('name')}
+        </Typography>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -383,68 +408,98 @@ export default function GetAllProductsComponent(props) {
           AboutUs={handleAboutUs}
           Admin={handleAdmin}
           Logout={handleLogout} />
-
       </Drawer>
-      <Dialog open={openAddProductDialogBoxPaper}>
-      <DialogTitle >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-           <CloseIcon onClick={() => { closeDialogBox() }} style={{ cursor: 'pointer',justifyContent:'flex-end'  }} />
-                                </DialogTitle>
-                                <Divider />
-                                <DialogContent >
-                                <Typography className={classes.typography}>
-                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment">Product Name</InputLabel>
-          <OutlinedInput
-              endAdornment={
-              <InputAdornment position="end"></InputAdornment>
-            }
-  labelWidth={70}/>&nbsp;<Button  color='primary' variant="contained" 
-  onClick={()=>handleAddproduct()}>Submit</Button>
-        </FormControl>.</Typography> 
-                                </DialogContent>
-                            </Dialog>
+      <Snackbar open={alert.open} message={alert.message} ContentProps={{style : 
+            {backgroundColor : alert.backgroundColor} }} anchorOrigin={{vertical:"top",horizontal:"center"}}
+             onClose={()=>setAlert({...alert,open:false})}
+             autoHideDuration={4000} />
+      <Dialog open={openAddProductDialogBoxPaper} PaperProps={{
+                            style: {
+                                paddingTop: "3em",
+                                paddingBottom: "3em",
+                                paddingLeft: "6em",
+                                paddingRight: "6em"
+                            }
+                        }} >
+                          <DialogTitle>
+                                <Grid container spacing={"2em"} alignItems="center" justify="space-between" >
+                                    <Grid item>
+                                        Add Products
+                                </Grid>
+                                    <Grid item>
 
+                                        <CloseIcon onClick={() => { closeDialogBox() }} style={{ cursor: 'pointer' }} />
+                                    </Grid>
+                                </Grid>
+                            </DialogTitle>
+        <Divider />
+        <DialogContent >
+          <Typography className={classes.typography}>
+            <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+              {/* <OutlinedInput type="text" id="standard-basic" placeholder="Product Name" value={createProductName}
+                onChange={e => setCreateproductname(e.target.value)}
+                labelWidth={70} /> */}
+              <TextField id="outlined-basic" placeholder="Product Name" variant="outlined" label="Product Name" value={createProductName}
+                onChange={e => setCreateproductname(e.target.value)}
+                labelWidth={70} />
+              
+                <Grid item style={{ paddingTop: "2em", paddingLeft: "6em" }} justify="flex-end" >
+
+<Button variant="contained" onClick={() => addSinglProduct()}>Add</Button>
+</Grid>
+            </FormControl>.</Typography>
+        </DialogContent>
+      </Dialog>
       <main className={classes.content}  >
         <Container maxWidth="lg" >
-       
-          <div style={{ display: "flex", justifyContent: "flex-end", fontSize:'large', paddingTop: '100px' }}>
-          
+
           <div >
-          <AddCircleIcon onClick={()=>{openDialogBox()}} style={{fontSize: "200px",width:'190%',height:'40'}}>
-           Products
-          </AddCircleIcon>
+    
+
+            {sessionStorage.getItem('role') === 'admin' ? <div style={{ display: "flex", justifyContent: "flex-end", fontSize: 'large', paddingTop: '100px' }} >
+              <AddCircleIcon onClick={() => { openDialogBox() }} style={{ cursor : 'pointer' ,fontSize: "200px", width: '4%', height: '40' }}>
+              </AddCircleIcon>
+
+            </div> : <div style={{ visibility: 'hidden', display: "flex", justifyContent: "flex-end", fontSize: 'large', paddingTop: '100px' }} >
+                <AddCircleIcon onClick={() => { openDialogBox() }} style={{ cursor : 'pointer' ,fontSize: "200px", width: '4%', height: '40' }}>
+                </AddCircleIcon>
+
+              </div>}
+              
           </div>
-     <div 
-     style={{display:'flex',justifyContent:"space-between"}}>
-    </div> 
-            {show ? project.map(value => (
-              <div  onClick={()=>handleBuildDetails(value.id)} props={props}><ul>
-                <b>
-                 <Grid item xs={12} md={4} lg={3}>
-                  <Paper className={classes.root} > <CardContent> 
-                    <Typography className={classes.title} color="textSecondary" gutterBottom>
-                  </Typography> {value.product_name}
+
+
+
+          <Grid container alignItems="flex-start" justify="flex-start" direction="row" spacing={3}>
+            {project.map(value => (
+              <Grid item xs={14} sm={6} md={3}>
+                <Card onClick={() => handleBuildDetails(value.id, value.product_name)} props={props} varient="outlined" style={{cursor : 'pointer'}}>
+                  <CardContent>
+                    <Grid container direction="column" style={{ textAlign: "center" }}>
+                      <Grid item >
+                        <Typography varient="h2"  >
+                          <CardHeader title={"Product Name"} 
+                          />
+                        </Typography>
+                        
+                      </Grid>
+                      <Divider></Divider>
+                      <Grid item >
+                        <Typography varient="h3" gutterBottom className={classes.heading}>
+                          <CardContent 
+                             style ={{ fontSize : "30px"}}> {value.product_name} </CardContent>
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </CardContent>
-                  </Paper> </Grid>
-                  </b> 
-              </ul> 
-            {console.log(value.id)
-            }</div>
-            )) : null
-            }
-            {console.log(project)
-            }
-
-          </div>
-
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Container>
       </main>
       <div>
       </div>
-      <Snackbar 
-        open={snackbar  }
-        onClose={SnackbarhandleClose} message="Product Added"
-         />
-                </div>
+    </div>
   );
 }

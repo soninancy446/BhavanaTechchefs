@@ -3,6 +3,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { fade, makeStyles } from '@material-ui/core/styles';
+import CardHeader from '@material-ui/core/CardHeader';
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent';
 // import { Button } from '@material-ui/core';
 import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
@@ -13,7 +16,6 @@ import Badge from '@material-ui/core/Badge';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import ListItemsDrawer from './ListItemsDrawer';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -22,6 +24,9 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
+  },
+  username : {
+    fontSize: '1.2rem'
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -55,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 0.9,
   },
   drawerPaper: {
     position: 'relative',
@@ -128,9 +133,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function GetAllProductsComponent(props) {
-
-  console.log(props.location);
-  
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -155,16 +157,12 @@ export default function GetAllProductsComponent(props) {
 
     props.history.push("/AboutUsComponent");
   }
-  const handleAdmin = () => {
-
-    console.log("Admin");
-
+  const handleAdmin=()=>{
     props.history.push("/Admin");
   }
-  const handleLogout = () => {
-
-    console.log("Logout");
-
+  const handleLogout=()=>{
+    sessionStorage.removeItem('token')
+    sessionStorage.removeItem('role')
     props.history.push("/");
   }
 
@@ -185,11 +183,9 @@ export default function GetAllProductsComponent(props) {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             About Us
         </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={0} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+        <Typography className={classes.username} componnet="h2">
+          Hi,{sessionStorage.getItem('name')}
+        </Typography>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -209,6 +205,7 @@ export default function GetAllProductsComponent(props) {
           Dashboard={handleDeshboard}
           AllProduct={handleAllProduct}
           AboutUs={handleAboutUs} 
+          
           Admin={handleAdmin}
           Logout={handleLogout}/>
 
@@ -216,11 +213,61 @@ export default function GetAllProductsComponent(props) {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Grid item xs={12} md={4} lg={3}>
-            <Paper className={fixedHeightPaper}>
+<Grid>
+<Grid item xs={10} sm={10} md={12}>
+    <Card varient="outlined" className={classes.reducepaddingfronbottomandtop}>
+        <CardContent>
+            <Grid container direction="column" style={{ textAlign: "center" }}>
+                <Grid item >
+                    <Typography gutterBottom>
+                      
+                        <CardHeader title=
+                            "Thank you for Visiting" className={classes.description} />
+                    </Typography>
+                </Grid>
+                <Divider></Divider>
+                <Grid >
+                    <Divider></Divider>
+                    <Grid container alignItems="center" direction="column">  
+                    <Grid item>                                      
+                    <CardContent>
+                    <Typography varient="h3" gutterBottom>
+                        
+</Typography>
+                </CardContent>
+                </Grid>
+                <Grid item>
+                <CardContent>
+                    <Typography varient="h3" gutterBottom>
+                      
+</Typography>
+                </CardContent>
+                </Grid>
+                <Grid item>
+                <CardContent>
+                    <Typography varient="h3" gutterBottom>
+                        
+</Typography>
+                </CardContent>
+                </Grid>
+                <Grid item>
+                <CardContent>
+                    <Typography varient="h3" gutterBottom>
+                        
+</Typography>
+                </CardContent>
+                </Grid>
+                </Grid>
+                </Grid>
 
-            </Paper>
-          </Grid></Container></main>
+            </Grid>
+        </CardContent>
+    </Card>
+
+
+</Grid>
+</Grid>
+          </Container></main>
     </div>
 
   );

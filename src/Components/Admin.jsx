@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
+import TablePagination from '@material-ui/core/TablePagination';
+import Card from '@material-ui/core/Card'
+import {  CardHeader, CardContent } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -28,7 +31,7 @@ import Badge from '@material-ui/core/Badge';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+
 import ListItemsDrawer from './ListItemsDrawer';
 
 import Table from '@material-ui/core/Table';
@@ -40,12 +43,20 @@ import Grid from '@material-ui/core/Grid';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+import {getAllUserForAdmin} from '../Services/ServiceNew'
+
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         width: '100%',
 
+    },
+    username : {
+        fontSize: '1.2rem'
+      },
+    reducesize: {
+        padding: 0
     },
     container: {
         maxHeight: 440,
@@ -75,6 +86,14 @@ const useStyles = makeStyles(theme => ({
             duration: theme.transitions.duration.enteringScreen,
         }),
     },
+    fontsizedata:{
+        fontSize : '16px'
+    },
+    tablecellfont : {
+        // fontWeight : '500',
+        fontSize: '18px',
+        
+    },
     menuButton: {
         marginRight: 36,
     },
@@ -82,7 +101,7 @@ const useStyles = makeStyles(theme => ({
         display: 'none',
     },
     title: {
-        flexGrow: 1,
+        flexGrow: 0.9,
     },
     drawerPaper: {
         position: 'relative',
@@ -183,64 +202,31 @@ export default function Admin(props) {
     const [project, setProject] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [postPerPage, setPostPerPage] = React.useState(3);
+    const [users, setUsers] = React.useState([]);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    let data = {
-        "users": [
-            {
-                name: "Windows ",
-                role: "Pm",
-                emailId: "abc@gmail.com",
-                product: "calender",
-                id : "1"
-            },
-            {
-                name: "Windows ",
-                role: "Pm",
-                emailId: "abc@gmail.com",
-                product: "calender",
-                id: "2"
-            },
-            {
-                name: "Windows ",
-                role: "Pm",
-                emailId: "abc@gmail.com",
-                product: "calender",
-                id: "3"
-            },
-            {
-                name: "Windows ",
-                role: "Pm",
-                emailId: "abc@gmail.com",
-                product: "calender",
-                id:"4"
-            },
-            {
-                name: "Windows ",
-                role: "Pm",
-                emailId: "abc@gmail.com",
-                product: "calender",
-                id : "5"
-            },
-            {
-                name: "Windows ",
-                role: "Pm",
-                emailId: "abc@gmail.com",
-                product: "calender",
-                id : "6"
-            },
-            {
-                name: "Windows ",
-                role: "Pm",
-                emailId: "abc@gmail.com",
-                product: "calender",
-                id : "7"
-            },
-        ]
-    }
+    const [allUser,setAllUser] = React.useState([])
   
     useEffect(() => {
-        setPm(data.users);
-        setProject(data.users)
+        
+        getAllUserForAdmin().then((res)=>{
+          if (res.status == '401') {
+            sessionStorage.removeItem('token')
+            sessionStorage.removeItem('role')
+            props.history.push('/')
+          }
+            else{
+                console.log(res.clone().json())
+            return res.json()
+            }
+            
+        }).then((key)=>{
+            setAllUser(key)
+            console.log(allUser)
+        }).catch((err)=>{
+           
+        })
 
     },[])
    // const classes = useStyles();
@@ -291,13 +277,18 @@ props.history.push("/GetAllProductsComponent");
   const closeDialogBox =()=>{
     setProductDialog(false)
   }
-  const indexOfLastPage = currentPage * postPerPage;
-    console.log(indexOfLastPage)
-    const indexOfFirstPage = indexOfLastPage - postPerPage;
-    console.log(indexOfFirstPage)
-    console.log(project.length)
-    const pagenumber =  Math.ceil(project.length / postPerPage)
-    const currentPosts = project.slice(indexOfFirstPage, indexOfLastPage)
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, allUser.length - page * rowsPerPage);
+  
+
+
     return (
         <div  className={classes.root}>
  <CssBaseline />
@@ -315,7 +306,9 @@ props.history.push("/GetAllProductsComponent");
         <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
          Manage Your Project
         </Typography>
-        
+        <Typography className={classes.username} componnet="h2">
+          Hi, {sessionStorage.getItem('name')}
+        </Typography>
       </Toolbar>
     </AppBar>
     <Drawer
@@ -346,73 +339,80 @@ props.history.push("/GetAllProductsComponent");
       <Container maxWidth="lg" className={classes.container}>
       <Grid item xs={13} md={3} lg={4}>
           </Grid></Container></main>
-    
 
-
-          <Dialog open={productDialog}>
-                                <DialogTitle>
-                                    Trigger Builds
-                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
-                                    <CloseIcon onClick={() => { closeDialogBox() }} style={{ height:'200%',cursor: 'pointer'  }} />
-                               
-                                </DialogTitle>
-                               
-                                <DialogContent >
-                                    <Divider />
-                                    <div>                                    product 1
-                                    product 2
-                                    </div>
-                                    <div>
-                                        product 3 product 4
-
-                                    </div>
-
-                                </DialogContent>
-                            </Dialog>
-
-
-
-
-            <div className="Admin-table">
-            <Paper className={classes.roottable}>
-            
-                    <TableContainer className={classes.container}>
-              
-                                <AddCircleOutline variant="contained" color="primary"  style={{ width : '80px',cursor:'pointer'}} onClick={()=>{userRegistationPage()}}></AddCircleOutline>
-                        <Table ><div>
-                            <TableHead className={classes.Tableheading}>
-                                <div>
-                                    <TableRow >
-                                        <TableCell className={classes.newtableColumnWidth} >Username</TableCell>
-                                        <TableCell className={classes.newtableColumnWidth}>Role</TableCell>
-                                        <TableCell className={classes.newtableColumnWidth}>Email</TableCell>
-                                        <TableCell className={classes.newtableColumnWidth}>Product</TableCell>
-                                    </TableRow>
-                                </div>
-                            </TableHead>
-                            <TableBody >
-                                {currentPosts.map(value => (
-                                    <TableRow class="table-row">
-                                        <div hover style={{ cursor: 'pointer' }}>
-                                            <TableCell className={classes.newtableColumnWidth}>{value.name}</TableCell>
-                                            <TableCell className={classes.newtableColumnWidth}>{value.role}</TableCell>
-                                            <TableCell className={classes.newtableColumnWidth}>{value.emailId}</TableCell>
-                                            <TableCell className={classes.newtableColumnWidth}> <Button variant="primary" justifyContent='flex-end' variant="contained" onClick={()=>{
-                                                showProducts(value.id)
-                                            }}>View Products</Button></TableCell>
-                                        </div>
-                                    </TableRow>
-                                ))}
+            <div className="userTable">
+             <Grid item>
+                        <Paper elevation={3}>
+                            <Card className={classes.reducesize}>
+                                <Grid item>
+                                   
+                                        <CardHeader title="Users in Database" 
+                                        action={
+                                            <IconButton aria-label="Add User">
+                                              <AddCircleOutline variant="contained" color="primary"  style={{ fontSize: "40px"}} onClick={()=>{userRegistationPage()}} />
                                 
-                            </TableBody>
-                        </div> </Table>
-                        <Reactpagination postsPerPage={postPerPage} totalPosts={project.length} paginate={paginate} />
-                        {/* <Pagination count={pagenumber} size="small" onClick={() => paginate(pagenumber)} /> */}
-                    </TableContainer>
-                   
-                </Paper>
-                
-            </div>
+                                   
+                                            </IconButton>
+                                          }/>
+                                        
+                                </Grid>
+                            </Card>
+
+
+
+
+                            <Divider ></Divider>
+                            <TableContainer >
+                                <Table>
+
+                                    <TableHead>
+                                        <TableRow >
+
+                                            <TableCell className={classes.tablecellfont}>Name</TableCell>
+                                            <TableCell className={classes.tablecellfont}>Role</TableCell>
+                                            <TableCell className={classes.tablecellfont}>Email</TableCell>
+                                            <TableCell className={classes.tablecellfont}>Product</TableCell>
+                                            
+
+                                           
+
+
+
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                    
+                                       {allUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((value) => (
+                                        <TableRow>
+                                            <TableCell className={classes.fontsizedata}>{value.username}</TableCell>
+                                            <TableCell className={classes.fontsizedata}>{value.role}</TableCell>
+                                            <TableCell className={classes.fontsizedata}>{value.email}</TableCell>
+                                            <TableCell className={classes.fontsizedata}> {value.product_list.map((items)=>
+                                              <div> {items.product_name} </div>
+                                            )}    </TableCell>
+                                            
+                                            
+
+                                        </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={allUser.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+                        </Paper>
+                        
+                    </Grid>
+                    </div>
+
         </div>
     )
 }

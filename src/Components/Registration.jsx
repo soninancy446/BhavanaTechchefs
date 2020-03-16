@@ -25,6 +25,9 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
   },
+  username : {
+    fontSize: '1.2rem'
+  },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
   },
@@ -57,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 0.9,
   },
   drawerPaper: {
     position: 'relative',
@@ -177,7 +180,9 @@ props.history.push("/GetAllProductsComponent");
         <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
          Registration
         </Typography>
-        
+        <Typography className={classes.username} componnet="h2">
+          Hi,{sessionStorage.getItem('name')}
+        </Typography>
       </Toolbar>
     </AppBar>
     <Drawer
@@ -212,8 +217,10 @@ props.history.push("/GetAllProductsComponent");
           </div>
           </Container>
          </main>
-   
+  
+     
+
     </div>
- 
+  
 );
 }

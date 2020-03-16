@@ -76,7 +76,7 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 0.9,
   },
   drawerPaper: {
     position: 'relative',
@@ -138,13 +138,7 @@ export default function admindashboard(props) {
   const handleAllProduct = () => {
     props.history.push("/GetAllProductsComponent");
     console.log("GetAllProducts");
-   
-  }
-  const handleAdmin=()=>{
-    props.history.push("/Admin");
-  }
-  const handleLogout=()=>{
-    props.history.push("/");
+    // props.history.push("/GetAllProductsComponent");
   }
   const handleAboutUs = () => {
 
@@ -170,11 +164,7 @@ export default function admindashboard(props) {
             Dashboard
             </Typography>
 
-          <IconButton color="inherit">
-            <Badge badgeContent={0} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+         
         </Toolbar>
       </AppBar>
       <Drawer
@@ -193,9 +183,7 @@ export default function admindashboard(props) {
         <ListItemsDrawer
           Dashboard={handleDeshboard}
           AllProduct={handleAllProduct}
-          AboutUs={handleAboutUs} 
-          Admin={handleAdmin}
-          Logout={handleLogout} />
+          AboutUs={handleAboutUs} />
 
       </Drawer>
       <main className={classes.content}>
